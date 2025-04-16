@@ -173,5 +173,3 @@ static int interpolate(Spline splines[], double x, int n, double* result)
     
     return 0;
 }
-    return 0;
-}
