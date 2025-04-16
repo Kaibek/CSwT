@@ -61,10 +61,8 @@ static int build_cubic_spline(const double x_vals[], const double y[],int n, Spl
         return -1;
 
     for (int i = 1; i < n; i++) 
-    {
-        if (x_vals[i] <= x_vals[i - 1])
-            return -1;                                                      // x_vals должны быть строго возрастающими
-    }
+        if (x_vals[i] <= x_vals[i - 1]) return -1;                          // x_vals должны быть строго возрастающими
+    
 
 
     double h[N - 1];                                                        // Шаги
@@ -92,8 +90,7 @@ static int build_cubic_spline(const double x_vals[], const double y[],int n, Spl
     }
 
     int ret = tridiagonal_solve(n, a, b, c, d, k);
-    if (ret)
-        return ret;
+    if (ret) return ret;
 
     // Вычисляем коэффициенты сплайна
     for (int i = cr_st; i < N - 1; i++)
@@ -104,8 +101,6 @@ static int build_cubic_spline(const double x_vals[], const double y[],int n, Spl
         tmp->k = k[i];
         tmp->d = (k[i + 1] - k[i]) / (3 * h[i]);
         tmp->x = x_vals[i];
-
-        return 0;
     }
 
 
@@ -116,32 +111,31 @@ static int build_cubic_spline(const double x_vals[], const double y[],int n, Spl
     tmp->k = ZD;
     tmp->d = ZD;
     tmp->x = x_vals[N - 1];
-
+    
+    return 0;
 }
 
 
 
 static int binary_search(Spline splines[], double x, int n)
 {
-    if (n <= 0 || n > N || !splines)
-        return -1;
-    int left = 0; int right = 0;
-    while (left <= right)
+    if (n <= 0 || n > N || !splines) return -1;
+
+    int left = 0, right = n - 1;
+    while (left <= right) 
     {
         int mid = (left + right) / 2;
         if (x >= splines[mid].x && (mid == n - 1 || x <= splines[mid + 1].x))
-        {
             return mid;
-            if (x < splines[mid].x)
-                right = mid - 1;
-
-            else
-                left = mid + 1;
-        }
-
-        return n - 1; 
+        
+        if (x < splines[mid].x)
+            right = mid - 1;
+            
+        else
+            left = mid + 1;
     }
-       
+    
+    return n - 1; // Граничный случай
 }
 
 
@@ -155,17 +149,12 @@ static int interpolate(Spline splines[], double x, int n, double* result)
     if (i < 0) return i;
 
     if (x < splines[0].x) 
-    {
         *result = splines[0].a;
-        return 0;
-    }
 
     if (x > splines[n - 1].x) 
-    {
         *result = splines[n - 1].a;
-        return 0;
-    }
 
+    
     Spline* tmp = &splines[i];
     double dx = x - tmp->x;
     
