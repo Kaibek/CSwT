@@ -36,7 +36,7 @@ static int tridiagonal_solve(int n, db a[], db b[], db c[], db d[], db k[])
 	}
 
 	//конечные точки
-	db y_mid = b_prime[n - 2] - a[n - 1] * a_prime[n - 2];
+	db y_mid = и[n - 1] - a[n - 1] * a_prime[n - 2];
 	if (y_mid < 0) return -1;
 
 	b_prime[n - 1] = (d[n - 1] - a[n - 1] * b_prime[n - 2]) / y_mid;
