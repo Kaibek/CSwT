@@ -6,7 +6,7 @@ typedef double db;
 
 typedef struct
 {
-	db a, b, c, d, k;						// Коэффициенты полинома: a + b*(x-xi) + k*(x-xi)^2 + d*(x-xi)^3
+	db a, b, c, d, k;							// Коэффициенты полинома: a + b*(x-xi) + k*(x-xi)^2 + d*(x-xi)^3
 	db x;									// Левая граница интервала
 }Spline;
 
@@ -55,9 +55,9 @@ static int build_cubic_spline(int n, db x_vals[], db y[], Spline splines[])
 	for (int i = 0; i < n - 1; i++)
 		if (x_vals[i] > x_vals[i + 1]) return -15;
 
-	db  h[N - 1];							// Шаги
-	db	a[N] = { 0.0 }, b[N] = { 0.0 };		// Поддиагональ,  Диагональ,
-	db	c[N] = { 0.0 }, d[N] = { 0.0 };		// Наддиагональ, Правая часть
+	db  h[N - 1];								// Шаги
+	db	a[N] = { 0.0 }, b[N] = { 0.0 };					// Поддиагональ,  Диагональ,
+	db	c[N] = { 0.0 }, d[N] = { 0.0 };					// Наддиагональ, Правая часть
 	db  k[N];								// Вторые производные
 
 	// Вычисление шагов
