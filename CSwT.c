@@ -21,7 +21,7 @@ static int tridiagonal_solve(int n, db a[], db b[], db c[], db d[], db k[])
 	db a_prime[N];
 	db b_prime[N];
 	
-	// т.к y1 = b1, alpha1 = -c1/b1, beta1 = d1/y1
+	// т.к y1 = b1, alpha1 = c1/b1, beta1 = d1/y1
 	a_prime[0] = c[0] / b[0];
 	b_prime[0] = d[0] / b[0];
 
@@ -36,7 +36,7 @@ static int tridiagonal_solve(int n, db a[], db b[], db c[], db d[], db k[])
 	}
 
 	//конечные точки
-	db y_mid = и[n - 1] - a[n - 1] * a_prime[n - 2];
+	db y_mid = b[n - 1] - a[n - 1] * a_prime[n - 2];
 	if (y_mid < 0) return -1;
 
 	b_prime[n - 1] = (d[n - 1] - a[n - 1] * b_prime[n - 2]) / y_mid;
@@ -112,7 +112,7 @@ static int build_cubic_spline(int n, db x_vals[], db y[], Spline splines[])
 
 
 
-static int binary_search(Spline splines[], double x, int n)
+static int binary_search(Spline splines[], db x, int n)
 {
 	if (n <= 0 || n > N || !splines) return -1;
 
@@ -136,7 +136,7 @@ static int binary_search(Spline splines[], double x, int n)
 
 
 // Интерполяция значения или вычисление значения сплайна в точке x
-static int interpolate(Spline splines[], double x, int n, double* result)
+static int interpolate(Spline splines[], db x, int n, db* result)
 {
 	if (n <= 0 || n > N || !splines || !result) return -1;
 
@@ -156,7 +156,7 @@ static int interpolate(Spline splines[], double x, int n, double* result)
 	if (i < 0) return i;
 
 	Spline* tmp = &splines[i];
-	double dx = x - tmp->x;
+	db dx = x - tmp->x;
 
 	*result = tmp->a + tmp->b * dx + tmp->k * dx * dx + tmp->d * dx * dx * dx;
 
