@@ -111,9 +111,10 @@ static int build_cubic_spline(int n, db x_vals[], db y[], Spline splines[])
 }
 
 
-
+// int n - для формальности, но можно было просто N 
 static int binary_search(Spline splines[], db x, int n)
 {
+	// n <= 0 || n > N  - тоже для формальности, но можно было обойдись без N, но это для примера
 	if (n <= 0 || n > N || !splines) return -1;
 
 	int left = 0, right = n - 1;
@@ -138,6 +139,7 @@ static int binary_search(Spline splines[], db x, int n)
 // Интерполяция значения или вычисление значения сплайна в точке x
 static int interpolate(Spline splines[], db x, int n, db* result)
 {
+	// n <= 0 || n > N  - тоже для формальности, но можно было обойдись без N, но это для примера
 	if (n <= 0 || n > N || !splines || !result) return -1;
 
 	if (x < splines[0].x) 
@@ -157,8 +159,9 @@ static int interpolate(Spline splines[], db x, int n, db* result)
 
 	Spline* tmp = &splines[i];
 	db dx = x - tmp->x;
-
-	*result = tmp->a + tmp->b * dx + tmp->k * dx * dx + tmp->d * dx * dx * dx;
+	
+	//Коэффициенты полинома: a + b*(x-xi) + k*(x-xi)^2 + d*(x-xi)^3
+	*result = tmp->a + dx * (tmp->b + dx * (tmp->k + dx * tmp->d));
 
 	return 0;
 }
